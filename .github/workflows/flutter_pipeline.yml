@@ -1,4 +1,4 @@
-name: Flutter CI/CD Pipeline
+name: Testing Build Release status
 
 on:
   push:

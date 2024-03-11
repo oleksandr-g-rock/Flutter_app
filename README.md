@@ -4,9 +4,7 @@ This project demonstrates a CI/CD pipeline using GitHub Actions for a cross-plat
 
 ## CI/CD Status Badges
 
-![Tests](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
-![Build](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
-![Release Status](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
+![Testing Build Release status](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
 ![Release number](https://img.shields.io/github/v/release/oleksandr-g-rock/Flutter_app)
 
 
