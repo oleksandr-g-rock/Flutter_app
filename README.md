@@ -50,7 +50,7 @@ The journey of creating a pipeline for a Flutter application presented a unique 
 
 - **CI Pipeline Configuration**: The creation of `.github/workflows/flutter_pipeline.yml` was a pivotal moment, laying the groundwork for automated testing and build processes. However, uncertainty about the extent of tests available beyond `flutter analyze` prompted further exploration into Flutter's testing capabilities.
 
-- **Exploring Testing and Optimization Strategies**: Research into parallel testing strategies led to the implementation of a matrix strategy for more efficient test execution. Additionally, a version compatibility issue with Flutter necessitated an upgrade to align with GitHub's Flutter package, highlighting the importance of maintaining compatibility across development and CI environments.
+- **Exploring Testing and Optimization Strategies**: After investigating parallel testing strategies, I removed the matrix strategy implementation due to inefficiency caused by running all steps in one job.. Additionally, a version compatibility issue with Flutter necessitated an upgrade to align with GitHub's Flutter package, highlighting the importance of maintaining compatibility across development and CI environments.
 
 - **Integration Testing and Pipeline Efficiency**: Learning to create a simple integration test for iOS and macOS platforms was a significant step forward, allowing for the early detection and correction of issues in local env. Optimizing the pipeline by consolidating all tests into a single job proved more efficient, as separate jobs tended to run slower in comparison. This optimization also extended to caching strategies, further enhancing pipeline performance. 
 
