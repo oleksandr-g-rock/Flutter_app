@@ -26,7 +26,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-flutter-
     - name: Test step - Set correct file permissions
-      run: find ./flutter_application_main -type f -iname "*" -exec chmod 755 {} \;
+      run: find . -type f -iname "*" -exec chmod 755 {} \;
     - name: Test step - Install dependencies
       run: flutter pub get
     - name: Test step - Run analyze
