@@ -25,8 +25,6 @@ jobs:
         key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
         restore-keys: |
           ${{ runner.os }}-flutter-
-    - name: Test step - Set correct file permissions
-      run: find . -type f -iname "*" -exec chmod 755 {} \;
     - name: Test step - Install dependencies
       run: flutter pub get
     - name: Test step - Run analyze
