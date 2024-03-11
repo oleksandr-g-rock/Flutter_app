@@ -22,21 +22,8 @@ jobs:
     - name: Test step - Run flutter tests
       run: flutter test
       working-directory: ./flutter_application_main
-    # - name: Test step - Run real Boot Simulator for IoS and macos
-    #   run: |
-    #     DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
-    #     if [ -z "$DEVICE_ID" ]; then
-    #       echo "Specified device not found, falling back to default simulator"
-    #       DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | .udid' | head -n 1)
-    #     fi
-    #     echo "Using device ID $DEVICE_ID"
-    #     xcrun simctl boot "$DEVICE_ID"
-    #   working-directory: ./flutter_application_main
-    # - name: Test step - Run real integration tests for IoS and macos
-    #   run: flutter test integration_test/app_test.dart
-    #   working-directory: ./flutter_application_main
-    - name: Test step - Run fake integration tests
-      run: echo "flutter test integration_test/app_test.dart - passed"
+    - name: Test step - Run real integration tests for Android
+      run: flutter test integration_test/app_test.dart
       working-directory: ./flutter_application_main
 
     - name: Build step - Build app for Android
