@@ -4,9 +4,11 @@ This project demonstrates a CI/CD pipeline using GitHub Actions for a cross-plat
 
 ## CI/CD Status Badges
 
-![Flutter CI/CD Pipeline](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
-![Release](https://github.com/oleksandr-g-rock/Flutter_app/workflows/release/badge.svg?branch=test-branch)
-![Artifactory Release](https://img.shields.io/badge/dynamic/json?url=<ARTIFACTORY_URL>&label=release&query=$.version&color=blue)
+![Tests](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
+![Build](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
+![Release Status](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=test-branch)
+![Release number](https://api.github.com/repos/oleksandr-g-rock/Flutter_app/releases/latest)
+
 
 Replace `oleksandr-g-rock/Flutter_app` with your GitHub information and `<ARTIFACTORY_URL>` with the URL to your Artifactory release metadata, which should return JSON containing a `version` field.
 
