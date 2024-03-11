@@ -39,7 +39,7 @@ jobs:
       working-directory: ./flutter_application_main
 
   build:
-    needs: [test, test-ios-simulator]
+    needs: test
     runs-on: ubuntu-22.04
     strategy:
       matrix:
