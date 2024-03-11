@@ -3,8 +3,9 @@ name: Testing Build Release status
 on:
   push:
     branches:
-      - test-branch
+      - master
 
+# Setup default working-directory
 defaults:
   run:
     working-directory: ./flutter_application_main
@@ -17,6 +18,8 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
           channel: 'stable'
+
+    # Cache Part 
     - name: Cache Flutter dependencies
       uses: actions/cache@v2
       with:
@@ -25,6 +28,8 @@ jobs:
         key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
         restore-keys: |
           ${{ runner.os }}-flutter-
+
+    # Test Part 
     - name: Test step - Install dependencies
       run: flutter pub get
     - name: Test step - Run analyze
@@ -34,9 +39,11 @@ jobs:
     - name: Test step - Run fake integration tests for Android
       run: echo "flutter test integration_test --passed"
 
+    # Build Part 
     - name: Build step - Build app for Android
       run: flutter build apk --release
 
+    # Release Part 
     - name: Get current date and time
       id: current_date
       run: echo "::set-output name=date::$(date +'%S_%M_%H_%d_%m_%Y')"
