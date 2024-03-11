@@ -1,0 +1,65 @@
+name: Flutter CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        platform: [ios, macos, chrome, android]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.0.5'
+    - name: Install dependencies
+      run: flutter pub get
+    - name: Run analyze
+      run: flutter analyze 
+    - name: Run tests on ${{ matrix.platform }}
+      run: flutter test
+
+  build:
+    needs: test
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        platform: [ios, macos, chrome, android]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.0.5'
+    - name: Install dependencies
+      run: flutter pub get
+    - name: Build app for ${{ matrix.platform }}
+      run: |
+        if [ "${{ matrix.platform }}" == "ios" ]; then
+          flutter build ios --release
+        elif [ "${{ matrix.platform }}" == "macos" ]; then
+          flutter build macos --release
+        elif [ "${{ matrix.platform }}" == "chrome" ]; then
+          flutter build web --release
+        else
+          flutter build apk --release
+        fi
+
+  release:
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
