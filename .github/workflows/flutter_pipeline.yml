@@ -62,4 +62,3 @@ jobs:
         asset_path: ./flutter_application_main/build/app/outputs/flutter-apk/app-release.apk
         asset_name: App-Android-${{ github.run_number }}.apk
         asset_content_type: application/vnd.android.package-archive
-
