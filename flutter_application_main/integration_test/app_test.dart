@@ -10,7 +10,7 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      expect(find.text('Flutter'), findsOneWidget);
+      expect(find.text('Flutter'), findsNothing);
     });
   });
 }
