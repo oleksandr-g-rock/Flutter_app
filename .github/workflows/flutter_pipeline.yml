@@ -40,8 +40,7 @@ jobs:
       working-directory: ./flutter_application_main
 
     - name: Build step - Build app for Android
-      run: |
-          fflutter build apk --release
+      run: flutter build apk --release
       working-directory: ./flutter_application_main
 
     - name: Release step - Create Release
