@@ -3,7 +3,7 @@ name: Testing Build Release status
 on:
   push:
     branches:
-      - master
+      - main
 
 # Setup default working-directory
 defaults:

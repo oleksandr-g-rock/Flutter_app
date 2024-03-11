@@ -6,7 +6,7 @@ This project showcases a comprehensive pipeline designed for a cross-platform Fl
 
 ## Pipeline Status Badges
 
-![Testing Build Release status](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=master)
+![Testing Build Release status](https://github.com/oleksandr-g-rock/Flutter_app/actions/workflows/flutter_pipeline.yml/badge.svg?branch=main)
 ![Release number](https://img.shields.io/github/v/release/oleksandr-g-rock/Flutter_app)
 
 
@@ -28,7 +28,7 @@ This project showcases a comprehensive pipeline designed for a cross-platform Fl
 
 Below is a simplified diagram illustrating the CI workflow:
 
-1. **Push to `master`**: Trigger the CI pipeline on push events.
+1. **Push to `main`**: Trigger the CI pipeline on push events.
 2. **Checkout Code**: Fetch the latest code from the repository.
 3. **Install Dependencies**: Execute `flutter pub get`.
 4. **Code Analysis and Tests**: Run `flutter analyze` and `flutter test`.
