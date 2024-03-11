@@ -29,19 +29,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-flutter-
 
-    # Test Part 
-    - name: Test step - Install dependencies
-      run: flutter pub get
-    - name: Test step - Run analyze
-      run: flutter analyze
-    - name: Test step - Run flutter tests
-      run: flutter test
-    - name: Test step - Run fake integration tests for Android
-      run: echo "flutter test integration_test --passed"
-
-    # Build Part 
-    - name: Build step - Build app for Android
-      run: flutter build apk --release
+    # Test and Build part 
+    - name: Test and Build part
+      run: ../build.sh
 
     # Release Part 
     - name: Get current date and time
