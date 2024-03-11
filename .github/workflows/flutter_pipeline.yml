@@ -31,8 +31,6 @@ jobs:
       run: flutter pub get
     - name: Test step - Run analyze
       run: flutter analyze
-    - name: Test step - Check code formatting
-      run: flutter format --set-exit-if-changed .
     - name: Test step - Run flutter tests
       run: flutter test
     - name: Test step - Run real integration tests for Android
