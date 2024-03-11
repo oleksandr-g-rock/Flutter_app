@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
     - uses: subosito/flutter-action@v2
@@ -22,29 +22,21 @@ jobs:
     - name: Run tests
       run: flutter test
       working-directory: ./flutter_application_main
-
-  test-ios-simulator:
-    runs-on: macOS-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - name: Boot Simulator
-        run: |
-          DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
-          if [ -z "$DEVICE_ID" ]; then
-            echo "Specified device not found, falling back to default simulator"
-            DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | .udid' | head -n 1)
-          fi
-          echo "Using device ID $DEVICE_ID"
-          xcrun simctl boot "$DEVICE_ID"
-      - name: Install dependencies
-        run: flutter pub get
-        working-directory: ./flutter_application_main
-      - name: Run integration tests
-        run: flutter test integration_test/app_test.dart
-        working-directory: ./flutter_application_main
+    - name: Boot Simulator
+      run: |
+        DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
+        if [ -z "$DEVICE_ID" ]; then
+          echo "Specified device not found, falling back to default simulator"
+          DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | .udid' | head -n 1)
+        fi
+        echo "Using device ID $DEVICE_ID"
+        xcrun simctl boot "$DEVICE_ID"
+    - name: Install dependencies
+      run: flutter pub get
+      working-directory: ./flutter_application_main
+    - name: Run integration tests
+      run: flutter test integration_test/app_test.dart
+      working-directory: ./flutter_application_main
 
   build:
     needs: [test, test-ios-simulator]
