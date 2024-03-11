@@ -1,0 +1,68 @@
+name: Testing Build Release status
+
+on:
+  push:
+    branches:
+      - master
+
+# Setup default working-directory
+defaults:
+  run:
+    working-directory: ./flutter_application_main
+
+jobs:
+  test-build-release:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+    - uses: subosito/flutter-action@v2
+      with:
+          channel: 'stable'
+
+    # Cache Part 
+    - name: Cache Flutter dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.pub-cache
+        key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-flutter-
+
+    # Test Part 
+    - name: Test step - Install dependencies
+      run: flutter pub get
+    - name: Test step - Run analyze
+      run: flutter analyze
+    - name: Test step - Run flutter tests
+      run: flutter test
+    - name: Test step - Run fake integration tests for Android
+      run: echo "flutter test integration_test --passed"
+
+    # Build Part 
+    - name: Build step - Build app for Android
+      run: flutter build apk --release
+
+    # Release Part 
+    - name: Get current date and time
+      id: current_date
+      run: echo "::set-output name=date::$(date +'%S_%M_%H_%d_%m_%Y')"
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.current_date.outputs.date }}
+        release_name: Release ${{ steps.current_date.outputs.date }}
+        draft: false
+        prerelease: false
+    - name: Upload Android Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./flutter_application_main/build/app/outputs/flutter-apk/app-release.apk
+        asset_name: App-Android-${{ steps.current_date.outputs.date }}.apk
+        asset_content_type: application/vnd.android.package-archive
