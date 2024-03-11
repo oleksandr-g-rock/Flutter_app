@@ -32,7 +32,7 @@ jobs:
     - name: Test step - Run flutter tests
       run: flutter test
     - name: Test step - Run real integration tests for Android
-      run: flutter test integration_test/app_test.dart
+      run: flutter test integration_test/app_test.dart -d chrome
 
     - name: Build step - Build app for Android
       run: flutter build apk --release
