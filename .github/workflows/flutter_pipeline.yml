@@ -24,7 +24,6 @@ jobs:
       working-directory: ./flutter_application_main
 
   test-ios-simulator:
-    needs: test
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +32,12 @@ jobs:
           channel: 'stable'
       - name: Boot Simulator
         run: |
-          DEVICE_ID=$(xcrun simctl list devices "iPhone 14" available --json | jq -r '.devices[] | .[0] | .udid')
+          DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
+          if [ -z "$DEVICE_ID" ]; then
+            echo "Specified device not found, falling back to default simulator"
+            DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | .udid' | head -n 1)
+          fi
+          echo "Using device ID $DEVICE_ID"
           xcrun simctl boot "$DEVICE_ID"
       - name: Install dependencies
         run: flutter pub get
