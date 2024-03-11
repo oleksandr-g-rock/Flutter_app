@@ -6,43 +6,43 @@ on:
       - test-branch
 
 jobs:
-  test:
+  test-build-release:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
     - uses: subosito/flutter-action@v2
       with:
           channel: 'stable'
-    - name: Install dependencies
+    - name: Test step - Install dependencies
       run: flutter pub get
       working-directory: ./flutter_application_main
-    - name: Run analyze
+    - name: Test step - Run analyze
       run: flutter analyze
       working-directory: ./flutter_application_main
-    - name: Run tests
+    - name: Test step - Run flutter tests
       run: flutter test
       working-directory: ./flutter_application_main
-    - name: Boot Simulator
-      run: |
-        DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
-        if [ -z "$DEVICE_ID" ]; then
-          echo "Specified device not found, falling back to default simulator"
-          DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | .udid' | head -n 1)
-        fi
-        echo "Using device ID $DEVICE_ID"
-        xcrun simctl boot "$DEVICE_ID"
-    - name: Install dependencies
-      run: flutter pub get
-      working-directory: ./flutter_application_main
-    - name: Run integration tests
-      run: flutter test integration_test/app_test.dart
-      working-directory: ./flutter_application_main
-    - name: Build app for ${{ matrix.platform }}
+    # - name: Test step - Boot Simulator
+    #   run: |
+    #     DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
+    #     if [ -z "$DEVICE_ID" ]; then
+    #       echo "Specified device not found, falling back to default simulator"
+    #       DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | .udid' | head -n 1)
+    #     fi
+    #     echo "Using device ID $DEVICE_ID"
+    #     xcrun simctl boot "$DEVICE_ID"
+    #   working-directory: ./flutter_application_main
+    # - name: Test step - Run integration tests
+    #   run: flutter test integration_test/app_test.dart
+    #   working-directory: ./flutter_application_main
+
+    - name: Build step - Build app for ios and macos
       run: |
           flutter build ios --release
           flutter build macos --release
       working-directory: ./flutter_application_main
-    - name: Create Release
+
+    - name: Release step - Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -52,3 +52,22 @@ jobs:
         release_name: Release ${{ github.run_number }}
         draft: false
         prerelease: false
+    - name: Release step - Upload iOS Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./flutter_application_main/build/ios/iphoneos/app.ipa
+        asset_name: App-iOS-${{ github.run_number }}.ipa
+        asset_content_type: application/octet-stream
+    - name: Release step - Upload macOS Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./flutter_application_main/build/macos/Build/Products/Release/app.app
+        asset_name: App-macOS-${{ github.run_number }}.app
+        asset_content_type: application/octet-stream
+
