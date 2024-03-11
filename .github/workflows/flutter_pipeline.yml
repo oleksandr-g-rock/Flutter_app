@@ -3,7 +3,7 @@ name: Flutter CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - test-branch
 
 jobs:
   test:
