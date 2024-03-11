@@ -23,24 +23,24 @@ jobs:
       run: flutter test
       working-directory: ./flutter_application_main
 
-test-ios-simulator:
-  needs: test
-  runs-on: macOS-latest
-  steps:
-    - uses: actions/checkout@v2
-    - uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-    - name: Boot Simulator
-      run: |
-        DEVICE_ID=$(xcrun simctl list devices "iPhone 14" available --json | jq -r '.devices[] | .[0] | .udid')
-        xcrun simctl boot "$DEVICE_ID"
-    - name: Install dependencies
-      run: flutter pub get
-      working-directory: ./flutter_application_main
-    - name: Run integration tests
-      run: flutter test integration_test/app_test.dart
-      working-directory: ./flutter_application_main
+  test-ios-simulator:
+    needs: test
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Boot Simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices "iPhone 14" available --json | jq -r '.devices[] | .[0] | .udid')
+          xcrun simctl boot "$DEVICE_ID"
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: ./flutter_application_main
+      - name: Run integration tests
+        run: flutter test integration_test/app_test.dart
+        working-directory: ./flutter_application_main
 
   build:
     needs: [test, test-ios-simulator]
