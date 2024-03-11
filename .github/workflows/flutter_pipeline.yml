@@ -37,39 +37,11 @@ jobs:
     - name: Run integration tests
       run: flutter test integration_test/app_test.dart
       working-directory: ./flutter_application_main
-
-  build:
-    needs: test
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        platform: [ios, macos, chrome, android]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: subosito/flutter-action@v2
-      with:
-          channel: 'stable'
-    - name: Install dependencies
-      run: flutter pub get
-      working-directory: ./flutter_application_main
     - name: Build app for ${{ matrix.platform }}
       run: |
-        if [ "${{ matrix.platform }}" == "ios" ]; then
           flutter build ios --release
-        elif [ "${{ matrix.platform }}" == "macos" ]; then
           flutter build macos --release
-        elif [ "${{ matrix.platform }}" == "chrome" ]; then
-          flutter build web --release
-        else
-          flutter build apk --release
-        fi
       working-directory: ./flutter_application_main
-
-  release:
-    needs: build
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@v2
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
