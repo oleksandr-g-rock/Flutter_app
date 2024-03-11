@@ -7,7 +7,7 @@ on:
 
 jobs:
   test-build-release:
-    runs-on: macOS-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
     - uses: subosito/flutter-action@v2
@@ -22,7 +22,7 @@ jobs:
     - name: Test step - Run flutter tests
       run: flutter test
       working-directory: ./flutter_application_main
-    # - name: Test step - Boot Simulator
+    # - name: Test step - Run real Boot Simulator for IoS and macos
     #   run: |
     #     DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 14") | .udid' | head -n 1)
     #     if [ -z "$DEVICE_ID" ]; then
@@ -32,17 +32,16 @@ jobs:
     #     echo "Using device ID $DEVICE_ID"
     #     xcrun simctl boot "$DEVICE_ID"
     #   working-directory: ./flutter_application_main
-    # - name: Test step - Run integration tests
+    # - name: Test step - Run real integration tests for IoS and macos
     #   run: flutter test integration_test/app_test.dart
     #   working-directory: ./flutter_application_main
     - name: Test step - Run fake integration tests
       run: echo "flutter test integration_test/app_test.dart - passed"
       working-directory: ./flutter_application_main
 
-    - name: Build step - Build app for ios and macos
+    - name: Build step - Build app for Android
       run: |
-          flutter build ios --release
-          flutter build macos --release
+          fflutter build apk --release
       working-directory: ./flutter_application_main
 
     - name: Release step - Create Release
@@ -55,22 +54,13 @@ jobs:
         release_name: Release ${{ github.run_number }}
         draft: false
         prerelease: false
-    - name: Release step - Upload iOS Release Asset
+    - name: Release step - Upload Android Release Asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./flutter_application_main/build/ios/iphoneos/app.ipa
-        asset_name: App-iOS-${{ github.run_number }}.ipa
-        asset_content_type: application/octet-stream
-    - name: Release step - Upload macOS Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./flutter_application_main/build/macos/Build/Products/Release/app.app
-        asset_name: App-macOS-${{ github.run_number }}.app
-        asset_content_type: application/octet-stream
+        asset_path: ./flutter_application_main/build/app/outputs/flutter-apk/app-release.apk
+        asset_name: App-Android-${{ github.run_number }}.apk
+        asset_content_type: application/vnd.android.package-archive
 
