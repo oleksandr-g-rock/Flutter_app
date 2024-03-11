@@ -17,8 +17,16 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
           channel: 'stable'
+    - name: Cache Flutter dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.pub-cache
+        key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-flutter-
     - name: Test step - Set correct file permissions
-      run: find ./flutter_application_main -type f -iname "*" -exec chmod 755 {}
+      run: find ./flutter_application_main -type f -iname "*" -exec chmod 755 {} \;
     - name: Test step - Install dependencies
       run: flutter pub get
     - name: Test step - Run analyze
