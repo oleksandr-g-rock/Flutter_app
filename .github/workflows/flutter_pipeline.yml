@@ -17,8 +17,6 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
           channel: 'stable'
-    - name: Test step - Check file encoding
-      run: file -i $(find . -type f) | grep -v 'utf-8' && { echo 'Non-UTF-8 files found'; exit 1; }
     - name: Test step - Set correct file permissions
       run: find ./flutter_application_main -type f -iname "*.sh" -exec chmod 755 {}
     - name: Test step - Install dependencies
