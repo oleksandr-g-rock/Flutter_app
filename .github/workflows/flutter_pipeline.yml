@@ -13,11 +13,20 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
           channel: 'stable'
+    - name: Check file encoding
+      run: |
+        file -i $(find . -type f) | grep -v 'utf-8' && { echo 'Non-UTF-8 files found'; exit 1; }
+    - name: Set correct file permissions
+      run: |
+        find ./flutter_application_main -type f -iname "*.sh" -exec chmod 755 {}
     - name: Test step - Install dependencies
       run: flutter pub get
       working-directory: ./flutter_application_main
     - name: Test step - Run analyze
       run: flutter analyze
+      working-directory: ./flutter_application_main
+    - name: Test step - Check code formatting
+      run: flutter format --set-exit-if-changed .
       working-directory: ./flutter_application_main
     - name: Test step - Run flutter tests
       run: flutter test
