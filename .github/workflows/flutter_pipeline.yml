@@ -18,13 +18,32 @@ jobs:
         flutter-version: '3.0.5'
     - name: Install dependencies
       run: flutter pub get
+      working-directory: ./flutter_application_main
     - name: Run analyze
-      run: flutter analyze 
-    - name: Run tests on ${{ matrix.platform }}
+      run: flutter analyze
+      working-directory: ./flutter_application_main
+    - name: Run tests
       run: flutter test
+      working-directory: ./flutter_application_main
+
+  test-ios-simulator:
+    needs: test
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 14'
+      - run: flutter pub get
+        working-directory: ./flutter_application_main
+      - run: flutter test integration_test
+        working-directory: ./flutter_application_main
 
   build:
-    needs: test
+    needs: [test, test-ios-simulator]
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -36,6 +55,7 @@ jobs:
         flutter-version: '3.0.5'
     - name: Install dependencies
       run: flutter pub get
+      working-directory: ./flutter_application_main
     - name: Build app for ${{ matrix.platform }}
       run: |
         if [ "${{ matrix.platform }}" == "ios" ]; then
@@ -47,6 +67,7 @@ jobs:
         else
           flutter build apk --release
         fi
+      working-directory: ./flutter_application_main
 
   release:
     needs: build
